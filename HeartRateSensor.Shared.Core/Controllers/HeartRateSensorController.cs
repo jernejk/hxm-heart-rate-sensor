@@ -77,8 +77,11 @@
                         message += (char)reader.ReadByte();
                     }
 
-                    // HACK: A hack which is required on Windows platform for a unknown reason.
-                    message = " " + message;
+                    // HACK: Sometimes there is a weird bug when we have to add 1 space at the begging.
+                    if (message.Length == 59)
+                    {
+                        message = " " + message;
+                    }
 
                     HeartBeatSensorData data = heartRateSensorParser.Parse(message);
                     RaiseUpdateEvent(data);
