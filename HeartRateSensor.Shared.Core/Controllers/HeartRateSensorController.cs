@@ -1,4 +1,6 @@
-﻿namespace HeartRateSensor.Shared.Core.Controllers
+﻿using System.Collections.Generic;
+
+namespace HeartRateSensor.Shared.Core.Controllers
 {
     using System;
     using System.Diagnostics;
@@ -65,25 +67,19 @@
             cancel = false;
             while (!cancel)
             {
-                string message = string.Empty;
                 try
                 {
                     reader.InputStreamOptions = InputStreamOptions.Partial;
 
                     uint count = await reader.LoadAsync(200);
 
-                    while (count-- > 0)
+                    byte[] bytes = new byte[count];
+                    for (int i = 0; i < count; ++i)
                     {
-                        message += (char)reader.ReadByte();
+                        bytes[i] = reader.ReadByte();
                     }
 
-                    // HACK: Sometimes there is a weird bug when we have to add 1 space at the begging.
-                    if (message.Length == 59)
-                    {
-                        message = " " + message;
-                    }
-
-                    HeartBeatSensorData data = heartRateSensorParser.Parse(message);
+                    HeartBeatSensorData data = heartRateSensorParser.Parse(bytes);
                     RaiseUpdateEvent(data);
 
                     await Task.Delay(delay);

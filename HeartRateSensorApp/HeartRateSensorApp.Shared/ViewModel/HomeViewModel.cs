@@ -136,7 +136,7 @@
 
         void sensorController_Updated(object sender, HeartRateSensor.Shared.Core.Data.HeartBeatSensorUpdateEventArgs e)
         {
-            if (e.Data != null && e.Data.Available)
+            if (e.Data != null && e.Data.IsAvailable)
             {
                 HeartBeatSensorData = e.Data;
             }

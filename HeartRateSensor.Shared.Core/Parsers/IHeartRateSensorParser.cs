@@ -12,6 +12,6 @@
         /// </summary>
         /// <param name="data">String received from heart rate sensor.</param>
         /// <returns>Returns parsed data from the device.</returns>
-        HeartBeatSensorData Parse(string data);
+        HeartBeatSensorData Parse(byte[] data);
     }
 }
