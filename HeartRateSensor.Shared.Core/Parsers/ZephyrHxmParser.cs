@@ -149,7 +149,6 @@
             {
                 payload.ContainsStrideData = true;
 
-                // Distance in 1/16m in 2 bytes.
                 int rawDistance = GetShort(bytes, offset);
                 offset += 2;
 
@@ -159,10 +158,11 @@
                 payload.Stride = bytes[offset];
                 ++offset;
 
-                // Distance in 1/16m in 2 bytes.
+                // Distance in 1/16 m in 2 bytes.
                 const double distanceOneStep = 1.0 / 16.0;
                 payload.Distance = rawDistance*distanceOneStep;
 
+                // Speed in 1/256 m/s in 2 bytes. 0 - 15.996 m/s.
                 const double speedOneStep = 1.0 / 256.0;
                 payload.Speed = rawSpeed*speedOneStep;
             }

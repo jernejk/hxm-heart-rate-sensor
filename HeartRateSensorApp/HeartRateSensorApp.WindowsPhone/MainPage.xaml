@@ -2,12 +2,11 @@
     x:Class="HeartRateSensorApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HeartRateSensorApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="using:HeartRateSensorApp.ViewModel"
-    xmlns:data="using:HeartRateSensor.Shared.Core.Data"
     mc:Ignorable="d"
+    FontSize="16"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.DataContext>
         <viewModel:HomeViewModel />
@@ -18,8 +17,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,0,20,0">
-            <ListBox Height="400" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+            <ListBox Height="300" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding DisplayName}" />
@@ -30,7 +30,41 @@
         </StackPanel>
 
         <Grid Grid.Row="1">
-            <TextBlock Text="{Binding HeartBeatSensorData.HeartBeatPerMinute,TargetNullValue='Not inicialized'}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="60" Foreground="White" />
+            <StackPanel HorizontalAlignment="Left" Margin="20,0,0,0">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                    <Run Text="Heart beat: " />
+                    <Run Text="{Binding HeartBeatSensorData.HeartBeatPerMinute}" FontSize="28" FontWeight="SemiBold" />
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                    <Run Text="Total heart beats: " />
+                    <Run Text="{Binding HeartBeatSensorData.TotalHeartBeats}" FontSize="28" FontWeight="SemiBold" />
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                    <Run Text="Stride: " />
+                    <Run Text="{Binding HeartBeatSensorData.Stride}" FontSize="28" FontWeight="SemiBold" />
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                    <Run Text="Distance: " />
+                    <Run Text="{Binding HeartBeatSensorData.Distance}" FontSize="28" FontWeight="SemiBold" />
+                    <Run Text=" m" />
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                    <Run Text="Speed: " />
+                    <Run Text="{Binding HeartBeatSensorData.Speed}" FontSize="28" FontWeight="SemiBold" />
+                    <Run Text=" m/s" />
+                </TextBlock>
+                
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White">
+                    <Run Text="Battery: " />
+                    <Run Text="{Binding HeartBeatSensorData.Battery}" FontSize="28" FontWeight="SemiBold" />
+                    <Run Text=" %" />
+                </TextBlock>
+            </StackPanel>
+            
             <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{Binding IsLoading}" />
         </Grid>
     </Grid>

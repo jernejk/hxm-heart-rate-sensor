@@ -5,7 +5,8 @@
     using System.Windows.Input;
 
     /// <summary>
-    /// Copied from http://snipplr.com/view.php?codeview&id=13642
+    /// Copied from http://snipplr.com/view.php?codeview&id=13642.
+    /// You should use MVVM Light or similiar for this kind of stuff.
     /// </summary>
     public class RelayCommand : ICommand
     {

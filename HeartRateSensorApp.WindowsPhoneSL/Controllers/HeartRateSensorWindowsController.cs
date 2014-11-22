@@ -7,6 +7,10 @@
     using System;
     using System.Threading.Tasks;
 
+    using Windows.Networking.Proximity;
+    using Windows.Networking.Sockets;
+    using Windows.Storage.Streams;
+
     public class HeartRateSensorWindowsController : HeartRateSensorController
     {
         public HeartRateSensorWindowsController(IHeartRateSensorParser heartRateSensorParser, int updateFrequency = 5)
@@ -16,7 +20,17 @@
 
         public async override Task ConnectToDeviceAsync(DeviceInformation deviceInformation)
         {
-            throw new NotImplementedException();
+            var peer = deviceInformation.PlatformDeviceObject as PeerInformation;
+            if (peer == null)
+            {
+                throw new NotSupportedException("Unknown platform device object in device information.");
+            }
+
+            socket = new StreamSocket();
+
+            // Note: If either parameter is null or empty, the call will throw an exception
+            await socket.ConnectAsync(peer.HostName, "{00001101-0000-1000-8000-00805f9b34fb}");
+            reader = new DataReader(socket.InputStream);
         }
     }
 }

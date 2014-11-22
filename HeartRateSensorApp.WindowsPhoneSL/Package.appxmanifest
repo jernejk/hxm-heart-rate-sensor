@@ -46,6 +46,12 @@
     </Application>
   </Applications>
   <Capabilities>
+    <!-- This is used for BT connection -->
+    <m2:DeviceCapability Name="bluetooth.rfcomm">
+      <m2:Device Id="any">
+        <m2:Function Type="name:serialPort" />
+      </m2:Device>
+    </m2:DeviceCapability>
   </Capabilities>
   <Extensions>
     <Extension Category="windows.activatableClass.inProcessServer">

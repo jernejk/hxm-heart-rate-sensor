@@ -1,7 +1,6 @@
 ﻿namespace HeartRateSensor.Shared.Core.Controllers
 {
     using System;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using HeartRateSensor.Shared.Core.Data;
@@ -10,6 +9,9 @@
     using Windows.Networking.Sockets;
     using Windows.Storage.Streams;
 
+    /// <summary>
+    /// This controller is used to connect and get data from a device.
+    /// </summary>
     public abstract class HeartRateSensorController
     {
         protected readonly IHeartRateSensorParser heartRateSensorParser;
@@ -33,9 +35,14 @@
 
         public abstract Task ConnectToDeviceAsync(DeviceInformation deviceInformation);
 
-        public async Task Start()
+        /// <summary>
+        /// Starts processing sensor data from device.
+        /// <remarks>You need to be connected to the device!</remarks>
+        /// <remarks>This method will complete when called <see cref="Stop" /> method.</remarks>
+        /// </summary>
+        public async Task StartAsync()
         {
-            int delay = (int)Math.Round(1000 / (float)updateFrequency);
+            int interval = (int)Math.Round(1000 / (float)updateFrequency);
 
             cancel = false;
             while (!cancel)
@@ -44,29 +51,35 @@
                 {
                     reader.InputStreamOptions = InputStreamOptions.Partial;
 
+                    // All messages should be size of 60 bytes however it is possible
+                    // that device was unable to keep up all the data and receives more than 60 bytes.
+                    // Also a different sensor can also have different message size.
                     uint count = await reader.LoadAsync(200);
 
+                    // I had some weird issues with ReadBytes but ReadByte worked just fine.
                     byte[] bytes = new byte[count];
                     for (int i = 0; i < count; ++i)
                     {
                         bytes[i] = reader.ReadByte();
                     }
 
+                    // Parse data and send new data to listeners.
                     HeartBeatSensorData data = heartRateSensorParser.Parse(bytes);
-                    RaiseUpdateEvent(data);
+                    RaiseUpdateEvent(data, null);
 
-                    await Task.Delay(delay);
+                    // Sleep until next interval
+                    await Task.Delay(interval);
                 }
                 catch (Exception ex)
                 {
-                    // TODO: Do something more.
-                    Debug.WriteLine(ex.Message);
+                    RaiseUpdateEvent(null, ex);
                 }
             }
         }
 
         /// <summary>
         /// Stops processing devices output but keeps connection.
+        /// Call <see cref="StartAsync" /> to resume processing data.
         /// </summary>
         public void Stop()
         {
@@ -74,10 +87,12 @@
         }
 
         /// <summary>
-        /// Terminate an connection.
+        /// Terminate current connection.
         /// </summary>
         public void Disconnect()
         {
+            Stop();
+
             if (reader != null)
             {
                 reader.DetachStream();
@@ -92,14 +107,11 @@
             }
         }
 
-        private void RaiseUpdateEvent(HeartBeatSensorData data)
+        private void RaiseUpdateEvent(HeartBeatSensorData data, Exception error)
         {
             if (Updated != null)
             {
-                var eventArgs = new HeartBeatSensorUpdateEventArgs();
-                eventArgs.Data = data;
-
-                Updated(this, eventArgs);
+                Updated(this, new HeartBeatSensorUpdateEventArgs(data, error));
             }
         }
     }
