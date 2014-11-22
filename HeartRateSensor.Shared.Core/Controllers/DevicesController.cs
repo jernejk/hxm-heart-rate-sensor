@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace HeartRateSensor.Shared.Core.Controllers
+﻿namespace HeartRateSensor.Shared.Core.Controllers
 {
-    using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using Windows.Devices.Enumeration;
 
     public abstract class DevicesController
     {
-        public abstract Task<List<HeartRateSensor.Shared.Core.Data.DeviceInformation>> GetAllDevicesAsync();
+        public abstract Task<List<Data.DeviceInformation>> GetAllDevicesAsync();
     }
 }

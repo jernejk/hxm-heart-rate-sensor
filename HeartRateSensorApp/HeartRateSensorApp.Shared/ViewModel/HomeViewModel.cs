@@ -1,17 +1,16 @@
-﻿using HeartRateSensorApp.Controllers;
-
-namespace HeartRateSensorApp.ViewModel
+﻿namespace HeartRateSensorApp.ViewModel
 {
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Input;
-
     using HeartRateSensor.Shared.Core.Controllers;
     using HeartRateSensor.Shared.Core.Data;
     using HeartRateSensor.Shared.Core.Parsers;
 
     using HeartRateSensorApp.Commands;
+    using HeartRateSensorApp.Controllers;
+
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using System.Windows.Input;
 
     public class HomeViewModel : INotifyPropertyChanged
     {
@@ -134,7 +133,7 @@ namespace HeartRateSensorApp.ViewModel
             }
         }
 
-        void sensorController_Updated(object sender, HeartRateSensor.Shared.Core.Data.HeartBeatSensorUpdateEventArgs e)
+        void sensorController_Updated(object sender, HeartBeatSensorUpdateEventArgs e)
         {
             if (e.Data != null && e.Data.IsAvailable)
             {

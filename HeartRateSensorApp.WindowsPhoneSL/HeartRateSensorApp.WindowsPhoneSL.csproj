@@ -97,9 +97,17 @@
     <PlatformTarget />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\HeartRateSensorApp\HeartRateSensorApp.Shared\Commands\RelayCommand.cs">
+      <Link>Commands\RelayCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\HeartRateSensorApp\HeartRateSensorApp.Shared\ViewModel\HomeViewModel.cs">
+      <Link>ViewModel\HomeViewModel.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\DevicesWindowsController.cs" />
+    <Compile Include="Controllers\HeartRateSensorWindowsController.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -170,9 +178,7 @@
       <Name>HeartRateSensor.Shared.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
