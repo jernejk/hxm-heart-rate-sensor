@@ -2,9 +2,6 @@
 {
     using HeartRateSensor.Shared.Core.Data;
 
-    using System.Diagnostics;
-    using System.Text;
-
     /// <summary>
     /// This is used for parsing data from Zephyr non BT LE heart rate sensors.
     /// I don't have any BT LE devices to test them. I believe they have a different set of APIs.
