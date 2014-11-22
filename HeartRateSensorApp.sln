@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeartRateSensorApp", "HeartRateSensorApp", "{CC9A65C7-C8E5-49B9-B98C-CBD32B602B27}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HeartRateSensorApp.Shared", "HeartRateSensorApp\HeartRateSensorApp.Shared\HeartRateSensorApp.Shared.shproj", "{B88E904C-B7F4-4318-8E55-382642914912}"
 EndProject
