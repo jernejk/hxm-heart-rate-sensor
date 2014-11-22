@@ -7,26 +7,23 @@
     using HeartRateSensor.Shared.Core.Data;
     using HeartRateSensor.Shared.Core.Parsers;
 
-    using Windows.Devices.Bluetooth.Rfcomm;
-    using Windows.Devices.Enumeration;
     using Windows.Networking.Sockets;
     using Windows.Storage.Streams;
 
-    public class HeartRateSensorController
+    public abstract class HeartRateSensorController
     {
-        private readonly IHeartRateSensorParser heartRateSensorParser;
-        private int updateFrequency;
-        private StreamSocket socket;
-        private DataWriter writer;
-        private DataReader reader;
-        private bool cancel;
+        protected readonly IHeartRateSensorParser heartRateSensorParser;
+        protected int updateFrequency;
+        protected StreamSocket socket;
+        protected DataReader reader;
+        protected bool cancel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeartRateSensorController"/> class.
         /// </summary>
         /// <param name="heartRateSensorParser">The heart rate sensor parser.</param>
         /// <param name="updateFrequency">The update frequency.</param>
-        public HeartRateSensorController(IHeartRateSensorParser heartRateSensorParser, int updateFrequency = 5)
+        protected HeartRateSensorController(IHeartRateSensorParser heartRateSensorParser, int updateFrequency = 5)
         {
             this.heartRateSensorParser = heartRateSensorParser;
             this.updateFrequency = updateFrequency;
@@ -34,27 +31,7 @@
 
         public event EventHandler<HeartBeatSensorUpdateEventArgs> Updated;
 
-        public async Task ConnectToDevice(DeviceInformation deviceInformation)
-        {
-            var connectService = RfcommDeviceService.FromIdAsync(deviceInformation.Id);
-            RfcommDeviceService rfcommService = await connectService;
-
-            if (rfcommService != null)
-            {
-                socket = new StreamSocket();
-                await
-                    socket.ConnectAsync(
-                        rfcommService.ConnectionHostName,
-                        rfcommService.ConnectionServiceName,
-                        SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
-
-                writer = new DataWriter(socket.OutputStream);
-                reader = new DataReader(socket.InputStream);
-
-                // Wait for one cycle before continue.
-                await Task.Delay(200);
-            }
-        }
+        public abstract Task ConnectToDeviceAsync(DeviceInformation deviceInformation);
 
         public async Task Start()
         {
@@ -106,13 +83,6 @@
                 reader.DetachStream();
                 reader.Dispose();
                 reader = null;
-            }
-
-            if (writer != null)
-            {
-                writer.DetachStream();
-                writer.Dispose();
-                writer = null;
             }
 
             if (socket != null)

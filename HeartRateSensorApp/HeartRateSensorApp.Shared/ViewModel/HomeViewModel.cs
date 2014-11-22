@@ -1,4 +1,6 @@
-﻿namespace HeartRateSensorApp.ViewModel
+﻿using HeartRateSensorApp.Controllers;
+
+namespace HeartRateSensorApp.ViewModel
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -8,8 +10,6 @@
     using HeartRateSensor.Shared.Core.Controllers;
     using HeartRateSensor.Shared.Core.Data;
     using HeartRateSensor.Shared.Core.Parsers;
-
-    using Windows.Devices.Enumeration;
 
     using HeartRateSensorApp.Commands;
 
@@ -27,8 +27,8 @@
         public HomeViewModel()
         {
             sensorParser = new ZephyrHxmParser();
-            sensorController = new HeartRateSensorController(sensorParser);
-            devicesController = new DevicesController();
+            sensorController = new HeartRateSensorWindowsController(sensorParser);
+            devicesController = new DevicesWindowsController();
 
             Devices = new ObservableCollection<DeviceInformation>();
             ConnectToDeviceCommand = new RelayCommand(ConnectToDevice);
@@ -114,7 +114,7 @@
 
             try
             {
-                await sensorController.ConnectToDevice(SelectedDevice);
+                await sensorController.ConnectToDeviceAsync(SelectedDevice);
                 sensorController.Start();
             }
             catch

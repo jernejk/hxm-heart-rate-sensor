@@ -35,14 +35,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-  <ItemGroup>
     <TargetPlatform Include="Windows Phone, Version=8.1" />
-    <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
     <TargetPlatform Include="Windows, Version=8.1" />
+    <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\DevicesController.cs" />
+    <Compile Include="Controllers\HeartRateSensorController.cs" />
+    <Compile Include="Data\DeviceInformation.cs" />
     <Compile Include="Data\HeartBeatSensorData.cs" />
     <Compile Include="Data\HeartBeatSensorUpdateEventArgs.cs" />
     <Compile Include="Parsers\IHeartRateSensorParser.cs" />

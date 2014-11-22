@@ -16,8 +16,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Commands\RelayCommand.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controllers\DevicesController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controllers\HeartRateSensorController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\DevicesWindowsController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\HeartRateSensorWindowsController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\HomeViewModel.cs" />
   </ItemGroup>
 </Project>
