@@ -25,26 +25,25 @@ namespace HeartRateSensorApp.Controllers
                 throw new NotSupportedException("Unknown platform device object in device information.");
             }
 
-            var connectService = RfcommDeviceService.FromIdAsync(device.Id); 
-             RfcommDeviceService rfcommService = await connectService; 
- 
+            lastConnectedDeviceName = device.Name;
 
-             if (rfcommService != null) 
-             { 
-                 socket = new StreamSocket(); 
-                 await 
-                     socket.ConnectAsync( 
-                         rfcommService.ConnectionHostName, 
-                         rfcommService.ConnectionServiceName, 
-                         SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication); 
- 
+            var connectService = RfcommDeviceService.FromIdAsync(device.Id);
+            RfcommDeviceService rfcommService = await connectService;
 
-                 reader = new DataReader(socket.InputStream); 
- 
+            if (rfcommService != null)
+            {
+                socket = new StreamSocket();
+                await
+                    socket.ConnectAsync(
+                        rfcommService.ConnectionHostName,
+                        rfcommService.ConnectionServiceName,
+                        SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
 
-                 // Wait for one cycle before continue. 
-                 await Task.Delay(200); 
-             } 
+                reader = new DataReader(socket.InputStream);
+
+                // Wait for one cycle before continue. 
+                await Task.Delay(200);
+            }
         }
     }
 }

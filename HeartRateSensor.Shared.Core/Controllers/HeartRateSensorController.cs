@@ -15,6 +15,7 @@
     public abstract class HeartRateSensorController
     {
         protected readonly IHeartRateSensorParser heartRateSensorParser;
+        protected string lastConnectedDeviceName;
         protected int updateFrequency;
         protected StreamSocket socket;
         protected DataReader reader;
@@ -65,6 +66,7 @@
 
                     // Parse data and send new data to listeners.
                     HeartBeatSensorData data = heartRateSensorParser.Parse(bytes);
+                    data.DeviceName = lastConnectedDeviceName;
                     RaiseUpdateEvent(data, null);
 
                     // Sleep until next interval

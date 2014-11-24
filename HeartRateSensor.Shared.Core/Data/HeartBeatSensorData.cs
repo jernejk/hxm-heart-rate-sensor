@@ -23,5 +23,7 @@
         public double Distance { get; set; }
 
         public double Speed { get; set; }
+
+        public int[] HeartBeatTimestamps { get; set; }
     }
 }

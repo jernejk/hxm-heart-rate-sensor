@@ -26,6 +26,8 @@
                 throw new NotSupportedException("Unknown platform device object in device information.");
             }
 
+            lastConnectedDeviceName = peer.DisplayName;
+
             socket = new StreamSocket();
 
             // Note: If either parameter is null or empty, the call will throw an exception

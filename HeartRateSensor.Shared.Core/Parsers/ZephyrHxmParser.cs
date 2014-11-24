@@ -31,6 +31,7 @@
                 sensorData.Battery = payload.Battery;
                 sensorData.HeartBeatPerMinute = payload.HeartRate;
                 sensorData.TotalHeartBeats = payload.HeartBeatNumber;
+                sensorData.HeartBeatTimestamps = payload.HeartBeatTimestamps;
 
                 if (payload.ContainsStrideData)
                 {
@@ -54,13 +55,16 @@
             // ETX or end of text
             const byte etx = 0x03;
 
+            // Message ID
+            const byte messageId = 0x26;
+
             // Multiple messages in a single package and header does not start at the start.
-            if (bytes[offset] != stx)
+            if (bytes[0] != stx || bytes[1] != messageId)
             {
                 offset = 1;
 
-                // Search for pattern ETX STX (0302)
-                while (offset < bytes.Length && !(bytes[offset -1] == etx && bytes[offset] == stx))
+                // Search for pattern ETX STX MessageID (0x030226)
+                while (offset + 13 < bytes.Length && !(bytes[offset - 1] == etx && bytes[offset] == stx && bytes[offset + 1] == messageId))
                 {
                     ++offset;
                 }
@@ -72,23 +76,18 @@
                 }
             }
 
-            // Sometimes we get multiple STX.
-            while (offset < bytes.Length && bytes[offset] != stx)
-            {
-                ++offset;
-            }
-
-            // Incomplete package. May happen time to time.
-            if (offset + 13 > bytes.Length)
+            // Incomplete package or something is weird. May happen time to time.
+            if (offset + 13 > bytes.Length || messageId != bytes[++offset])
             {
                 return header;
             }
 
-            byte messageId = bytes[++offset];
+            // Should be 55
             byte dlc = bytes[++offset];
 
-            // Firmware full name
             ++offset;
+
+            // Firmware full name
             header.Firmware = GetFullName(bytes, "9500", ref offset);
 
             // Hardware ID
@@ -96,20 +95,34 @@
 
             // Incomplete package. May happen time to time.
             int endPackage = offset + dlc + 1 - 8;
-            if (endPackage > bytes.Length || messageId != 0x26)
+            if (endPackage > bytes.Length)
             {
                 return header;
             }
 
-            // TODO: Use this for additional validations?
-            //if (bytes[bytes.Length - 1] != etx)
-            //{
-            //    return header;
-            //}
+            bool isValid = true;
+
+            // In most of the cases this should be false.
+            // This will most likely be true if there are multiple messages or message is corrupted/partial.
+            if (bytes[bytes.Length] - 1 != etx)
+            {
+                int endOffset = offset + dlc + 1;
+
+                // Search for pattern ETX STX (0x0302)
+                while (endOffset < bytes.Length && !(bytes[endOffset - 1] == etx && bytes[endOffset] == stx))
+                {
+                    ++endOffset;
+                }
+
+                if (endOffset == bytes.Length)
+                {
+                    isValid = false;
+                }
+            }
 
             // TODO: CRC check
 
-            header.IsValid = true;
+            header.IsValid = isValid;
             return header;
         }
 
@@ -122,9 +135,16 @@
             payload.HeartRate = bytes[offset++];
             payload.HeartBeatNumber = bytes[offset++];
 
-            // TODO: Data seems to behave weird if at first couple of reads and if data is not read fast enough.
-            // 15 heart beat timestamps by 2 bytes
-            offset += 2 * 15;
+            // TODO: When message is not 60 bytes, odd stuff are happening and may result in corrupted results.
+            // 15 heart beat timestamps by 2 bytes.
+            int[] timestamps = new int[15];
+            for (int i = 0; i < 15; ++i)
+            {
+                timestamps[i] = GetShort(bytes, offset);
+                offset += 2;
+            }
+
+            payload.HeartBeatTimestamps = timestamps;
 
             // TODO: Figure out why reserved does not start at offset 44 but it moves between 50-80.
             // For whatever reason reserved bytes (000000) is always moving when sensor does not give exactly 60 bytes.
@@ -172,7 +192,6 @@
 
         /// <summary>
         /// Read firmware and hardware full name in format 9500.xxxx.Vyz and 9800.xxxx.Vyz.
-        /// TODO: Verrify if values are parsed correctly.
         /// </summary>
         /// <param name="bytes">Data from device</param>
         /// <param name="prefix">Prefix for well formatted string. (eg. 9500 for firmware and 9800 for hardware)</param>
@@ -187,12 +206,6 @@
             char majorVersion = (char)bytes[offset + 1];
             char minorVersion = (char)bytes[offset];
             offset += 2;
-
-            // Value should be from a-z as character but instead it is \0.
-            if (minorVersion == 0)
-            {
-                minorVersion = 'A';
-            }
 
             return string.Format("{0}.{1}.V{2}{3}", prefix, id.ToString("0000"), majorVersion, minorVersion);
         }
@@ -218,6 +231,8 @@
             public double Distance;
             public double Speed;
             public byte Stride;
+
+            public int[] HeartBeatTimestamps;
 
             public bool ContainsStrideData;
         }
