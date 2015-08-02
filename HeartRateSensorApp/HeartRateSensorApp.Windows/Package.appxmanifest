@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="04cce8ea-cf5b-456a-bd23-646424126e8a" Publisher="CN=Jernej" Version="1.0.0.0" />
+  <Identity Name="04cce8ea-cf5b-456a-bd23-646424126e8a" Publisher="CN=Jernejk" Version="1.0.0.0" />
   <Properties>
     <DisplayName>HeartRateSensorApp.Windows</DisplayName>
     <PublisherDisplayName>Jernej</PublisherDisplayName>
@@ -22,7 +22,6 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    
     <!-- This is used for BT connection -->
     <m2:DeviceCapability Name="bluetooth.rfcomm">
       <m2:Device Id="any">
