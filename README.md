@@ -1,6 +1,8 @@
 hxm-heart-rate-sensor
 =====================
 
+[![Build status](https://ci.appveyor.com/api/projects/status/dilqdt61co0euf2k/branch/master?svg=true)](https://ci.appveyor.com/project/jernejk/hxm-heart-rate-sensor/branch/master)
+
 This is a homebrew project for Zephyr HxM heart rate sensor for Windows (Phone) 8.1 XAML and Windows Phone 8.1 SL.
 This only an example how you can connect to a Zephyr HxM BT heart rate sensor (non BT LE) and does not represent best practices.
 It uses some basics of dependency injections and MVVM for demonstrating how can you separate UI and code in your project. (no external libraries)
